@@ -1,2 +1,132 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: lightblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 320px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #0078d7;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        button {
+            width: 95%;
+            padding: 10px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 8px;
+            background: #0078d7;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #005fa3;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
 <body>
+
+<div class="box">
+    <h1>Login</h1>
+
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="login()">Sign In</button>
+    <button onclick="register()">Register</button>
+
+    <p id="message"></p>
+</div>
+
+<script>
+    function register() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!username || !password) {
+            showMessage("Please fill in all fields!", "red");
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem("users")) || {};
+
+        if (users[username]) {
+            showMessage("User already exists!", "red");
+            return;
+        }
+
+        users[username] = password;
+        localStorage.setItem("users", JSON.stringify(users));
+
+        showMessage("Registration successful!", "green");
+    }
+
+    function login() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+
+        let users = JSON.parse(localStorage.getItem("users")) || {};
+
+        if (users[username] === password) {
+            localStorage.setItem("currentUser", username);
+            showMessage("Login successful!", "green");
+
+            // Redirect to your browser's home page
+            // window.location.href = "home.html";
+        } else {
+            showMessage("Invalid credentials!", "red");
+        }
+    }
+
+    function showMessage(text, color) {
+        const msg = document.getElementById("message");
+        msg.textContent = text;
+        msg.style.color = color;
+    }
+
+    const currentUser = localStorage.getItem("currentUser");
+
+    if (currentUser) {
+        showMessage("Welcome back, " + currentUser + "!", "green");
+    }
+</script>
+
+</body>
+</html>
+
